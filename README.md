@@ -5,7 +5,7 @@ This is a simple ROS publisher for MarkerArray in Rviz. The current version can 
 
 ## Usage
 
-### (1) Modify "Marker Array Setting" in `demo.py`
+### (1) Modify "Marker Array Setting" in `gen_obstacles.py`
 
 - `radius`: the radius of each sphere
 - `num_obstacles`: the number of spheres that you are going to visualise
@@ -13,7 +13,7 @@ This is a simple ROS publisher for MarkerArray in Rviz. The current version can 
 
 ### (2) Run the following:
 
-  ``` rosrun rviz_marker_publisher demo.py```
+  ``` rosrun rviz_marker_publisher gen_obstacles.py```
 
 The result MarkerArray will be published via `visualization_marker_array` topic. 
 
