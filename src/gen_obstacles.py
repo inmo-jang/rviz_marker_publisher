@@ -7,6 +7,7 @@ from visualization_msgs.msg import Marker, MarkerArray
 from geometry_msgs.msg import Quaternion, Pose, Point, Vector3
 from std_msgs.msg import Header, ColorRGBA
 
+import readchar
 
 
 
@@ -24,7 +25,7 @@ def show_text_in_rviz(marker_publisher, text):
 
 
 
-def gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles):
+def gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles, lifetime = rospy.Duration(0)):
       
       
   __marker_array = MarkerArray()   
@@ -38,7 +39,7 @@ def gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles):
     __marker = Marker(
                   type=Marker.SPHERE,
                   id=__marker_id + 1000,
-                  lifetime=rospy.Duration(1.5),
+                  lifetime=lifetime,
                   pose=Pose(__random_pose, Quaternion(0, 0, 0, 1)),
                   scale=Vector3(2*radius, 2*radius, 2*radius), # Note: "scale" is a diameter.
                   header=Header(frame_id='base_link'),
@@ -49,10 +50,6 @@ def gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles):
 
   return __marker_array 
       
-
-      
-    
-
 def main():
   rospy.init_node('rviz_marker_array_publihser')
 
@@ -65,6 +62,10 @@ def main():
   num_obstacles = 10 
   range_obstacles = (0.3, 1.0, -0.1, 0.1, 0.0, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)
  
+  # User Interface setting
+  pos_stride = 0.015
+  obstacle_id = 0
+
   # Generate a marker array accordingly
   sphere_array = gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles)  
 
@@ -72,7 +73,7 @@ def main():
   sphere_array.markers.append(Marker(
                   type=Marker.SPHERE,
                   id=1001,
-                  lifetime=rospy.Duration(1.5),
+                  # lifetime=rospy.Duration(1.5),
                   pose=Pose(Point(0, 0, -0.1), Quaternion(0, 0, 0, 1)),
                   scale=Vector3(2*100, 2*100, 2*0.05), # Note: "scale" is a diameter.
                   header=Header(frame_id='base_link'),
@@ -82,9 +83,59 @@ def main():
   rate = rospy.Rate(10) # 10hz
   while not rospy.is_shutdown():
     marker_array_publisher.publish(sphere_array)
+    key = readchar.readkey()
+    if key == 'w':
+        sphere_array.markers[obstacle_id].pose.position.x += pos_stride  
+    elif key == 'x':
+        sphere_array.markers[obstacle_id].pose.position.x -= pos_stride
+    elif key == 'a':
+        sphere_array.markers[obstacle_id].pose.position.y += pos_stride
+    elif key == 'd':
+        sphere_array.markers[obstacle_id].pose.position.y -= pos_stride
+    elif key == 'q':
+        sphere_array.markers[obstacle_id].pose.position.z += pos_stride
+    elif key == 'z':
+        sphere_array.markers[obstacle_id].pose.position.z -= pos_stride
+    elif key == '0':
+        obstacle_id = 0;
+        print("Selected Obstacle", obstacle_id)
+    elif key == '1':
+        obstacle_id = 1;
+        print("Selected Obstacle", obstacle_id)        
+    elif key == '2':
+        obstacle_id = 2;
+        print("Selected Obstacle", obstacle_id)        
+    elif key == '3':
+        obstacle_id = 3;
+        print("Selected Obstacle", obstacle_id)        
+    elif key == '4':
+        obstacle_id = 4;
+        print("Selected Obstacle", obstacle_id)        
+    elif key == '5':
+        obstacle_id = 5;
+        print("Selected Obstacle", obstacle_id)        
+    elif key == '6':
+        obstacle_id = 6;
+        print("Selected Obstacle", obstacle_id)        
+    elif key == '7':
+        obstacle_id = 7;
+        print("Selected Obstacle", obstacle_id)                                                                            
+    elif key == '8':
+        obstacle_id = 8;
+        print("Selected Obstacle", obstacle_id)        
+    elif key == '9':
+        obstacle_id = 9;        
+        print("Selected Obstacle", obstacle_id)        
+    elif key == '\x03':
+        break
+
+    
     rate.sleep()
 
-  
+  ## When this node is closed
+  sphere_array = gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles, lifetime=rospy.Duration(0.5)) 
+  marker_array_publisher.publish(sphere_array)
+  marker_array_publisher.publish(MarkerArray())
  
   
 
