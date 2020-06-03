@@ -37,12 +37,12 @@ def gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles):
     
     __marker = Marker(
                   type=Marker.SPHERE,
-                  id=__marker_id,
+                  id=__marker_id + 1000,
                   lifetime=rospy.Duration(1.5),
                   pose=Pose(__random_pose, Quaternion(0, 0, 0, 1)),
                   scale=Vector3(2*radius, 2*radius, 2*radius), # Note: "scale" is a diameter.
                   header=Header(frame_id='base_link'),
-                  color=ColorRGBA(0.0, 0.8, 1.0, 0.8)) 
+                  color=ColorRGBA(0.0, 0.8, 1.0, 0.5)) 
      
     
     __marker_array.markers.append(__marker)
@@ -63,10 +63,20 @@ def main():
   # Marker Array setting
   radius = 0.1
   num_obstacles = 10 
-  range_obstacles = (-0.5, 0.5, -0.5, 0.5, 0.0, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)
+  range_obstacles = (0.3, 1.0, -0.1, 0.1, 0.0, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)
  
   # Generate a marker array accordingly
   sphere_array = gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles)  
+
+  # Add a bottom plane
+  sphere_array.markers.append(Marker(
+                  type=Marker.SPHERE,
+                  id=1001,
+                  lifetime=rospy.Duration(1.5),
+                  pose=Pose(Point(0, 0, -0.1), Quaternion(0, 0, 0, 1)),
+                  scale=Vector3(2*100, 2*100, 2*0.05), # Note: "scale" is a diameter.
+                  header=Header(frame_id='base_link'),
+                  color=ColorRGBA(0.0, 0.0, 1.0, 0.1)) )
 
   # Publish the array
   rate = rospy.Rate(10) # 10hz
