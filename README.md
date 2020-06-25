@@ -43,3 +43,5 @@ The result MarkerArray will be published via `visualization_marker_array` topic.
 ### Step 2) Run the follwing:
   ``` rosrun rviz_marker_publisher virtual_teleoperator.py```
   
+## Example
+See the video (https://youtu.be/Ki-miu0sTp4), which uses `RandomMove` for `gen_obstacles.py` and `mode = 2` for `virtual_teleoprator.py`
