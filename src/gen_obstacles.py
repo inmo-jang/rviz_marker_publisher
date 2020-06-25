@@ -2,6 +2,7 @@
 
 import rospy
 import random
+import numpy as np
 
 from visualization_msgs.msg import Marker, MarkerArray
 from geometry_msgs.msg import Quaternion, Pose, Point, Vector3
@@ -10,7 +11,9 @@ from std_msgs.msg import Header, ColorRGBA
 import readchar
 
 
-mode = 'Manual' # `RandomMove`
+# mode = 'Manual' 
+mode = 'RandomMove'
+obstacle_id = 0 # Intialisation for "Manual" mode
 
 def gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles, lifetime = rospy.Duration(0)):
       
@@ -49,9 +52,6 @@ def main():
   num_obstacles = 20 
   range_obstacles = (0.3, 0.6, -0.05, 0.05, 0.0, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)
  
-  # User Interface setting
-  
-  obstacle_id = 0
 
   # Generate a marker array accordingly
   sphere_array = gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles)  
@@ -79,7 +79,7 @@ def main():
                                                                                     
 
   # Publish the array
-  rate = rospy.Rate(10) # 10hz
+  rate = rospy.Rate(50) # 10hz
   while not rospy.is_shutdown():
     if mode == 'Manual':
         marker_array_publisher.publish(sphere_array)
@@ -88,8 +88,9 @@ def main():
             break        
         sphere_array = modify_sphere_array(sphere_array, key)
 
-    # elif mode = 'RandomMove':
-
+    elif mode == 'RandomMove':
+        marker_array_publisher.publish(sphere_array)     
+        sphere_array = random_move(sphere_array)
     
     rate.sleep()
 
@@ -98,6 +99,30 @@ def main():
   marker_array_publisher.publish(sphere_array)
   marker_array_publisher.publish(MarkerArray())
  
+
+
+def random_move(sphere_array):        
+    del_move = 0.001
+    obstacle_allowance_range = [0.0, 1.0, -0.5, 0.5, 0.0, 1.0] # x_min, x_max, y_min, y_max, z_min, z_max
+
+    for obstacle_id in range(0, len(sphere_array.markers)):
+        move = np.array([random.uniform(-1.0, 1.0), random.uniform(-1.0, 1.0), random.uniform(-1.0, 1.0)])
+        unit_move = move/np.linalg.norm(move)
+        
+        new_x = sphere_array.markers[obstacle_id].pose.position.x + del_move*unit_move[0]         
+        new_y = sphere_array.markers[obstacle_id].pose.position.y + del_move*unit_move[1] 
+        new_z = sphere_array.markers[obstacle_id].pose.position.z + del_move*unit_move[2] 
+
+        if new_x >= obstacle_allowance_range[0] and new_x <= obstacle_allowance_range[1]:
+            sphere_array.markers[obstacle_id].pose.position.x = new_x
+        if new_y >= obstacle_allowance_range[2] and new_y <= obstacle_allowance_range[3]:
+            sphere_array.markers[obstacle_id].pose.position.y = new_y
+        if new_z >= obstacle_allowance_range[4] and new_z <= obstacle_allowance_range[5]:
+            sphere_array.markers[obstacle_id].pose.position.z = new_z                        
+    
+
+    return sphere_array
+
 
 def modify_sphere_array(sphere_array, key):        
         pos_stride = 0.015
