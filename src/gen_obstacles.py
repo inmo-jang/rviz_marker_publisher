@@ -50,7 +50,7 @@ def main():
   range_obstacles = (0.3, 0.6, -0.05, 0.05, 0.0, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)
  
   # User Interface setting
-  pos_stride = 0.015
+  
   obstacle_id = 0
 
   # Generate a marker array accordingly
@@ -99,8 +99,10 @@ def main():
   marker_array_publisher.publish(MarkerArray())
  
 
-def modify_sphere_array(sphere_array, key):
-        
+def modify_sphere_array(sphere_array, key):        
+        pos_stride = 0.015
+        global obstacle_id
+
         if key == 'w':
             sphere_array.markers[obstacle_id].pose.position.x += pos_stride  
         elif key == 'x':
