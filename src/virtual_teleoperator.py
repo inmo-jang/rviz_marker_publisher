@@ -8,8 +8,8 @@ from geometry_msgs.msg import TwistStamped, Twist, Vector3
       
 ############ User Setting ##############
 pub_rate = 250
-xyzrpy = [0.3, 0.0, 0.0, 0.0, 0.0, 0.0]    # (m/s) XYZ velocity // (rad) Amplitudes of Roll Pitch Yaw in End Effector Frame
-moving_period = 4     # Repeatative moving period (sec)
+xyzrpy = [0.0, 0.4, 0.1, 0.0, 0.0, 0.0]    # (m/s) XYZ velocity // (rad) Amplitudes of Roll Pitch Yaw in End Effector Frame
+moving_period = [4, 8, 4, 0.0, 0.0, 0.0]     # Repeatative moving period (sec)
 
 
 def main():
@@ -36,9 +36,9 @@ def main():
   while not rospy.is_shutdown():
     time_now = rospy.get_rostime()
     time_step = (time_now - time_0).to_sec()
-    x = xyzrpy[0]*np.sin(2*np.pi*time_step/moving_period)
-    y = xyzrpy[1]*np.sin(2*np.pi*time_step/moving_period)
-    z = xyzrpy[2]*np.sin(2*np.pi*time_step/moving_period)
+    x = xyzrpy[0]*np.sin(2*np.pi*time_step/moving_period[0])
+    y = xyzrpy[1]*np.sin(2*np.pi*time_step/moving_period[1])
+    z = xyzrpy[2]*np.sin(2*np.pi*time_step/moving_period[2])
     
     palm_del_distance = Twist(linear = Vector3(x, y, z))
 

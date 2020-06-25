@@ -59,8 +59,8 @@ def main():
 
   # Marker Array setting
   radius = 0.1
-  num_obstacles = 10 
-  range_obstacles = (0.3, 1.0, -0.1, 0.1, 0.0, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)
+  num_obstacles = 20 
+  range_obstacles = (0.3, 0.6, -0.05, 0.05, 0.0, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)
  
   # User Interface setting
   pos_stride = 0.015
@@ -72,12 +72,24 @@ def main():
   # Add a bottom plane
   sphere_array.markers.append(Marker(
                   type=Marker.SPHERE,
-                  id=1001,
+                  id=2001,
                   # lifetime=rospy.Duration(1.5),
                   pose=Pose(Point(0, 0, -0.1), Quaternion(0, 0, 0, 1)),
                   scale=Vector3(2*100, 2*100, 2*0.05), # Note: "scale" is a diameter.
                   header=Header(frame_id='base_link'),
                   color=ColorRGBA(0.0, 0.0, 1.0, 0.1)) )
+
+  # Add a glove box
+#   box_side_half = 0.2      
+#   sphere_array.markers.append(Marker( # Right
+#                   type=Marker.SPHERE,
+#                   id=1003,
+#                   # lifetime=rospy.Duration(1.5),
+#                   pose=Pose(Point(0.0, -box_side_half, 0.0), Quaternion(0, 0, 0, 1)),
+#                   scale=Vector3(2*100, 2*0.05, 2*100), # Note: "scale" is a diameter.
+#                   header=Header(frame_id='base_link'),
+#                   color=ColorRGBA(0.0, 1.0, 0.0, 0.1)) )   
+                                                                                    
 
   # Publish the array
   rate = rospy.Rate(10) # 10hz
