@@ -77,7 +77,7 @@ def main():
 
   # Publish the virtual user commands
   rate = rospy.Rate(pub_rate)
-
+  epoch = 0
   while not rospy.is_shutdown():
     time_now = rospy.get_rostime()
     time_step = (time_now - time_0).to_sec()
@@ -106,8 +106,9 @@ def main():
           if time_step >= moving_period_mode_two/2:
             flag_new_target = 1
             time_0 = rospy.get_rostime()
-            if len(min_dist_to_obs_now) is not 0:         
-              print("Min Dist = ", min(list_min_dist_to_obs))
+            if len(min_dist_to_obs_now) is not 0:
+              epoch += 1         
+              print("Epoch = ", str(epoch), "; Min Dist = ", min(list_min_dist_to_obs))
               f.write(str(min(list_min_dist_to_obs))+"\n")
 
     
