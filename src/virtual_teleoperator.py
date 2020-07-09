@@ -10,6 +10,8 @@ import copy
 from datetime import datetime
 import os
 from threading import Thread
+from gen_obstacles import gen_multiple_spheres_in_rviz
+from visualization_msgs.msg import Marker, MarkerArray
 
 ########################################
 # NOTE: This node generates delta_pose (x,y,z,r,p,y) based on any existing end effector pose (i.e. relative position-based control)      
@@ -21,7 +23,7 @@ xyzrpy = [0.0, 0.4, 0.1, 0.0, 0.0, 0.0]    # (m/s) XYZ velocity // (rad) Amplitu
 moving_period = [4, 8, 4, 0.0, 0.0, 0.0]     # Repeatative moving period (sec)
 ### For Mode 2 (Random left and right, and back)
 # left_range = [0.2, 0.7, -0.3, -0.5, 0.1, 0.6]   # (x_min, x_max, y_min, y_max, z_min, z_max)
-right_range = [0.2, 0.7, 0.3, 0.5, 0.1, 0.6]    # (x_min, x_max, y_min, y_max, z_min, z_max)
+right_range = [0.2, 0.7, 0.3, 0.5, 0.2, 0.7]    # (x_min, x_max, y_min, y_max, z_min, z_max)
 max_del_x = 0.0001
 moving_period_mode_two = 4.0 # (sec)
 # Followings are initialisation
@@ -73,6 +75,13 @@ def main():
     x = Thread(target=start_recording_pubrate, args = [output_filename])
     x.start()
 
+    # Obstacle Publisher setting
+    marker_array_publisher = rospy.Publisher('visualization_marker_array', MarkerArray)
+    # Marker Array setting
+    radius = 0.1
+    num_obstacles = 500 
+    range_obstacles = (-0.1, 0.9, -0.05, 0.05, 0.3, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)    
+    
 
 
   # Publish the virtual user commands
@@ -93,6 +102,9 @@ def main():
             flag_new_target = 0
             goal = gen_random_goal(right_range)
             list_min_dist_to_obs = []
+            # Generate a marker array accordingly
+            sphere_array = gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles)
+            marker_array_publisher.publish(sphere_array)
 
           delta_pose = goal - ee_pose_init
           x = delta_pose[0]*np.sin(2*np.pi*time_step/moving_period_mode_two)
