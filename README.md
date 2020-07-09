@@ -27,8 +27,8 @@ The result MarkerArray will be published via `visualization_marker_array` topic.
 ## (2) Virtual teleoprator
 
 ### Step 1) Select the control mode (`mode`)  in `virtual_teleoprator.py`
-- `mode == 1`: "8"-shaped periodic moving. (Go to Step 2-1)
-- `mode == 2`: Random movement (Go to Step 2-2)
+- `mode == 1`: "8"-shaped periodic moving. (Go to Step 2-1) 
+- `mode == 2`: Random movement (Go to Step 2-2) -- NOTE: This includes the function of `gen_obstacles.py`, thus it is self-contained, i.e. you do not need to run `gen_obstacles.py` separately. This mode is for automatically collecting data for the paper. 
 
 ### Step 2-1) Periodic movement setting for Mode 1
 
