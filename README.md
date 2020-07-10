@@ -45,3 +45,16 @@ The result MarkerArray will be published via `visualization_marker_array` topic.
   
 ## Example
 See the video (https://youtu.be/Ki-miu0sTp4), which uses `RandomMove` for `gen_obstacles.py` and `mode = 2` for `virtual_teleoprator.py`
+
+
+## (3) Encapsulatting gazebo objects (`encapsulation.py`)
+
+### Step 1) Define object keywords and capsule sizes to encapsulate them 
+  - `keywords_of_object_to_encapsulate`: a list of the keyword strings (e.g. If you put `"object"` and any gazebo model object whose name includes this keyword will be encapsulated)
+  - `capsules_sizes`: a list of the capsule sizes for each keyword. NOTE: Currently, only ellipsoid capsule is available thus the capsule size is supposed to be its diameter for each axis. 
+  - `robot_height`: the z-axis offset between the IK solver's coordination frame and the Gazebo environment's frame. 
+  
+### Step 2) Run the following:
+  ```
+  rosrun rviz_marker_publisher encapsulation.py
+  ```
