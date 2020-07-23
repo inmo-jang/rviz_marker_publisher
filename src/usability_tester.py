@@ -150,7 +150,19 @@ def main():
     # For new test epoch: new target and new environment generation 
     if success_flag == 1:
         test_epoch += 1
-        obstacle_array = gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles)
+
+        candidate_min_dist_to_obs = 0.0
+        desired_distance = 0.12
+        while candidate_min_dist_to_obs < desired_distance:
+            obstacle_array = gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles)
+            obstacle_publisher.publish(obstacle_array)
+            rospy.sleep(0.05)
+            # Check the minimum distance
+            _min_dist_to_obs = copy.deepcopy(min_dist_to_obs_now)
+            candidate_min_dist_to_obs = min(_min_dist_to_obs)   
+            if candidate_min_dist_to_obs < desired_distance:
+                print("Some obstalces are too close")             
+
         target = get_target(range_target, obstacle_array)
         min_dist_to_obs = 1.0
 
@@ -168,7 +180,7 @@ def main():
     target_publisher.publish(target)
 
     # Obstacle Random Move and Publish
-    obstacle_array = random_move_obstacles(obstacle_array) 
+    # obstacle_array = random_move_obstacles(obstacle_array) 
     obstacle_publisher.publish(obstacle_array)   
 
     # Check the minimum distance
@@ -183,6 +195,13 @@ def main():
     _ee_pose = copy.deepcopy(ee_pose_now)
     _distance_to_target = np.linalg.norm(_ee_pose - _target_pose)
     
+    time_now = rospy.get_rostime()
+    time_spent = (time_now - time_0).to_sec()
+    if time_spent > 300.0:
+        print("Too long time")
+        success_flag = 1
+        test_epoch = test_epoch - 1
+
     if _distance_to_target < goal_radius:
         success_flag = 1
         time_now = rospy.get_rostime()
