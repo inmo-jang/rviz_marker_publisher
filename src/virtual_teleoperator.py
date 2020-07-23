@@ -23,9 +23,9 @@ xyzrpy = [0.0, 0.4, 0.1, 0.0, 0.0, 0.0]    # (m/s) XYZ velocity // (rad) Amplitu
 moving_period = [4, 8, 4, 0.0, 0.0, 0.0]     # Repeatative moving period (sec)
 ### For Mode 2 (Random left and right, and back)
 # left_range = [0.2, 0.7, -0.3, -0.5, 0.1, 0.6]   # (x_min, x_max, y_min, y_max, z_min, z_max)
-right_range = [0.2, 0.7, 0.3, 0.5, 0.2, 0.7]    # (x_min, x_max, y_min, y_max, z_min, z_max)
+right_range = [0.2, 0.7, 0.5, 0.6, 0.2, 0.7]    # (x_min, x_max, y_min, y_max, z_min, z_max)
 max_del_x = 0.0001
-moving_period_mode_two = 4.0 # (sec)
+moving_period_mode_two = 3.0 # (sec)
 # Followings are initialisation
 ee_pose_now = []
 min_dist_to_obs_now = []
@@ -79,8 +79,8 @@ def main():
     marker_array_publisher = rospy.Publisher('visualization_marker_array', MarkerArray)
     # Marker Array setting
     radius = 0.1
-    num_obstacles = 500 
-    range_obstacles = (-0.1, 0.9, -0.05, 0.05, 0.3, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)    
+    num_obstacles = 1000 
+    range_obstacles = (-0.1, 0.9, 0.30, 0.50, 0.0, 1.0) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)    
     
 
 
