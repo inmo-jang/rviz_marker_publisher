@@ -197,7 +197,7 @@ def main():
     
     time_now = rospy.get_rostime()
     time_spent = (time_now - time_0).to_sec()
-    if time_spent > 300.0:
+    if time_spent > 400.0:
         print("Too long time")
         success_flag = 1
         test_epoch = test_epoch - 1
