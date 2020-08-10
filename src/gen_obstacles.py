@@ -11,8 +11,9 @@ from std_msgs.msg import Header, ColorRGBA
 import readchar
 
 
+mode = 'TrajectoryTest' 
 # mode = 'Manual' 
-mode = 'RandomMove'
+# mode = 'RandomMove'
 obstacle_id = 0 # Intialisation for "Manual" mode
 
 def gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles, lifetime = rospy.Duration(0)):
@@ -39,7 +40,31 @@ def gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles, lifetim
     __marker_array.markers.append(__marker)
 
   return __marker_array 
+
+def gen_long_sphere(lifetime = rospy.Duration(0)):
       
+      
+    __marker_array = MarkerArray()   
+
+    __pose = Point(0.3, 0.0, 0.3)  
+    __radius = [0.1, 100.0, 0.1]
+
+    
+    __marker = Marker(
+                  type=Marker.SPHERE,
+                  id=1000,
+                  lifetime=lifetime,
+                  pose=Pose(__pose, Quaternion(0, 0, 0, 1)),
+                  scale=Vector3(2*__radius[0], 2*__radius[1], 2*__radius[2]), # Note: "scale" is a diameter.
+                  header=Header(frame_id='base_link'),
+                  color=ColorRGBA(0.0, 0.8, 1.0, 0.5)) 
+     
+    
+    __marker_array.markers.append(__marker)
+
+    return __marker_array 
+
+
 def main():
   rospy.init_node('rviz_marker_array_publihser')
 
@@ -50,8 +75,9 @@ def main():
   # Marker Array setting
   radius = 0.1
   num_obstacles = 20 
-  range_obstacles = (0.3, 0.6, -0.05, 0.05, 0.0, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)
- 
+#   range_obstacles = (0.3, 0.6, -0.05, 0.05, 0.0, 0.7) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)
+  range_obstacles = (-0.1, 0.9, 0.30, 0.50, 0.0, 1.0) # It should include (x_min, x_max, y_min, y_max, z_min, z_max)    
+
 
   # Generate a marker array accordingly
   sphere_array = gen_multiple_spheres_in_rviz(radius, num_obstacles, range_obstacles)  
@@ -91,6 +117,10 @@ def main():
     elif mode == 'RandomMove':
         marker_array_publisher.publish(sphere_array)     
         sphere_array = random_move(sphere_array)
+
+    elif mode == 'TrajectoryTest':
+        sphere_array = gen_long_sphere()
+        marker_array_publisher.publish(sphere_array)
     
     rate.sleep()
 
