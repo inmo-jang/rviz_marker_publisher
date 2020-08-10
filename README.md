@@ -29,6 +29,7 @@ The result MarkerArray will be published via `visualization_marker_array` topic.
 ### Step 1) Select the control mode (`mode`)  in `virtual_teleoprator.py`
 - `mode == 1`: "8"-shaped periodic moving. (Go to Step 2-1) 
 - `mode == 2`: Random movement (Go to Step 2-2) -- NOTE: This includes the function of `gen_obstacles.py`, thus it is self-contained, i.e. you do not need to run `gen_obstacles.py` separately. This mode is for automatically collecting data for the paper. 
+- `mode == 3` : Trajectory test (Go to Step 2-3)
 
 ### Step 2-1) Periodic movement setting for Mode 1
 
@@ -39,6 +40,10 @@ The result MarkerArray will be published via `visualization_marker_array` topic.
 - `right_range`: the range where each random target pose will be generated
 - `max_del_x`: a sense of velocity of the movement
 - `moving_period_mode_two`: Repeatative moving period (sec) 
+
+### Step 2-3) Up and down movement for Mode 3
+- `xyzrpy_mode3`: (m/s) XYZ velocity // (rad) Amplitudes of Roll Pitch Yaw in End Effector Frame
+- `moving_period_mode3`: Repeatative moving period (sec) 
 
 ### Step 2) Run the follwing:
   ``` rosrun rviz_marker_publisher virtual_teleoperator.py```
