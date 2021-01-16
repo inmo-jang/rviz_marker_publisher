@@ -16,6 +16,7 @@ This is a simple ROS publisher for MarkerArray in Rviz. The current version can 
 - `mode`: 
   - `Manual` mode allows to modify the obstacles' positions by pressing `w`, `x`, `a`, `d`, `q`, `z`.
   - `RandomMove` makes the obstacles slightly move randomly. 
+  - `TrajectoryTest` mode is for the test in Sec V-B (a.k.a. crossbar test). 
 
 ### Step 3) Run the following:
 
